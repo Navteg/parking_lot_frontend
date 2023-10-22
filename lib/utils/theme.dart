@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ColorTheme {
-  // Main Colors
   static const Color blackTheme = Color(0xFF000000);
   static const Color grayTheme = Color(0xFFC1C1C1);
   static const Color grayThemeLight = Color.fromARGB(255, 216, 216, 216);
@@ -10,12 +9,6 @@ class ColorTheme {
 
   static const Color whiteTheme = Color(0xFFFFFFFF);
   static Color primary = Colors.deepPurple;
-
-  static const Color warningBGColor = Color(0xFFFFF3CD);
-  static const Color warningTextColor = Color(0xFF856404);
-
-  static const Color successBGColor = Color(0xFFD4EDDA);
-  static const Color successTextColor = Color(0xFF155724);
 
   static const Color errorBGColor = Color(0xFFEFDFDE);
   static const Color errorTextColor = Color(0xFFCA3535);

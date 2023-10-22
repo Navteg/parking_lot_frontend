@@ -128,7 +128,7 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(height: ResponsiveUtils.screenHeight(context) * 0.02),
           SizedBox(
             height: ResponsiveUtils.screenHeight(context) * 0.06,
-            width: ResponsiveUtils.screenWidth(context) * 0.4,
+            width: double.infinity,
             child: ElevatedButton(
               key: const Key("register_button"),
               style: ElevatedButton.styleFrom(
