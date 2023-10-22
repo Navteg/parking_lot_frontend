@@ -401,6 +401,15 @@ class _ReleaseWidgetState extends State<ReleaseWidget> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: const Text('Payment Successful'),
+                                    content: Icon(
+                                      Icons.check_circle_outline,
+                                      color: Colors.green,
+                                      size:
+                                          ResponsiveUtils.screenWidth(context) >
+                                                  600
+                                              ? 80
+                                              : 60,
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: () {

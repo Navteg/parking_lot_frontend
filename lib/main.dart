@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:parking_lot_system/const/storage_keys.dart';
+import 'package:parking_lot_system/data/storage/key_value_storage_impl.dart';
 import 'package:parking_lot_system/utils/theme.dart';
 import 'package:parking_lot_system/views/screens/booking/booking.dart';
 import 'package:parking_lot_system/views/screens/login.dart';
@@ -27,18 +31,31 @@ class _MyAppState extends State<MyApp> {
         fontFamily: 'roboto',
         useMaterial3: true,
       ),
-      initialRoute: "/login",
       routes: {
         "/login": (context) => const LoginPage(),
         "/register": (context) => const RegisterPage(),
         "/booking": (context) => const BookingPage(),
         "/release": (context) => const ReleaseWidget(),
       },
+      home: FutureBuilder<bool>(
+        future: checkIfLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == true) {
+              return const BookingPage();
+            } else {
+              return const LoginPage();
+            }
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<bool> checkIfLoggedIn() async {
+    final token = await KeyValueStorageImpl().read(StorageKeys.token);
+    return token != null;
   }
 }
