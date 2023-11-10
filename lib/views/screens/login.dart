@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:parking_lot_system/const/storage_keys.dart';
-import 'package:parking_lot_system/data/api/login/login_api_impl.dart';
 import 'package:parking_lot_system/data/storage/key_value_storage_impl.dart';
+import 'package:parking_lot_system/domain/usecase/login_usecase.dart';
 import 'package:parking_lot_system/utils/responsive_utils.dart';
 import 'package:parking_lot_system/utils/theme.dart';
 import 'package:parking_lot_system/views/common/error_snack_bar.dart';
@@ -66,12 +66,12 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    final res = await LoginApiImpl().login(
+    final res = await LoginUseCase().execute(
       parkingId: parkingId,
       password: pass,
     );
 
-    if (res.token.isEmpty) {
+    if (res == null || res.token.isEmpty) {
       final snackBar = SnackBarWidget().errorSnackBar(
         "Invalid Credentials",
         context,
@@ -220,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             InkWell(
+              key: const Key("redirect_to_register"),
               onTap: () {
                 Navigator.pushReplacementNamed(context, "/register");
               },

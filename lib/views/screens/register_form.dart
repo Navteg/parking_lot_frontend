@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:parking_lot_system/data/api/registeration/registeration_api_impl.dart';
+import 'package:parking_lot_system/domain/usecase/register_usecase.dart';
 import 'package:parking_lot_system/utils/responsive_utils.dart';
 import 'package:parking_lot_system/utils/theme.dart';
 import 'package:parking_lot_system/views/common/error_snack_bar.dart';
@@ -137,8 +138,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 foregroundColor:
                     !isLoading ? ColorTheme.whiteTheme : ColorTheme.primary,
               ),
-              onPressed: () {
-                !isLoading && register();
+              onPressed: () async {
+                !isLoading ? register() : {};
               },
               child: !isLoading
                   ? const Text(
@@ -165,6 +166,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     color: const Color.fromARGB(255, 126, 126, 126)),
               ),
               InkWell(
+                key: const Key('redirect_to_login'),
                 onTap: () {
                   Navigator.pushReplacementNamed(context, "/login");
                 },
@@ -183,7 +185,7 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  register() async {
+  void register() async {
     setState(() {
       isLoading = true;
     });
@@ -194,7 +196,7 @@ class _RegisterFormState extends State<RegisterForm> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      final res = await RegisterationApiImpl().register(
+      final res = await RegisterUseCase().execute(
         floor: floors,
         smallSlot: smallVehicle,
         mediumSlot: mediumVehicle,
@@ -202,10 +204,10 @@ class _RegisterFormState extends State<RegisterForm> {
         xLargeSlot: xLargeVehicle,
         password: pass,
       );
-      if (res.id!.isNotEmpty) {
+      if (res != null && res.id.isNotEmpty) {
         setState(() {
           registerResponse.add(RegisterResponse(
-            id: res.id ?? "",
+            id: res.id,
             registered: true,
           ));
         });
@@ -245,7 +247,7 @@ class _RegisterFormState extends State<RegisterForm> {
       } else {
         setState(() {
           registerResponse.add(RegisterResponse(
-            id: res.id ?? "",
+            id: res?.id ?? "",
             registered: false,
           ));
         });

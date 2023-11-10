@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:parking_lot_system/data/api/slot-release/slot-release-api-impl.dart';
+import 'package:parking_lot_system/domain/usecase/release_usecase.dart';
 import 'package:parking_lot_system/utils/responsive_utils.dart';
 import 'package:parking_lot_system/utils/theme.dart';
 import 'package:parking_lot_system/views/common/error_snack_bar.dart';
@@ -87,11 +87,11 @@ class _ReleaseWidgetState extends State<ReleaseWidget> {
       return;
     }
 
-    final res = await SlotReleaseApiImpl().getSlotRelease(
+    final res = await ReleaseUseCase().execute(
       vehicleNumber: vehicleNumber,
     );
 
-    if (res.totalAmount != null && res.totalHrs != null) {
+    if (res != null && res.totalAmount != 0 && res.totalHrs != 0) {
       setState(() {
         releaseInfo.clear();
         releaseInfo.add(
@@ -99,8 +99,8 @@ class _ReleaseWidgetState extends State<ReleaseWidget> {
             totalAmount: res.totalAmount.toString(),
             totalHours: res.totalHrs.toString(),
             isReleased: true,
-            entryTime: res.entryTime ?? '',
-            exitTime: res.exitTime ?? '',
+            entryTime: res.entryTime,
+            exitTime: res.exitTime,
           ),
         );
         isLoading = false;
@@ -162,8 +162,8 @@ class _ReleaseWidgetState extends State<ReleaseWidget> {
               backgroundColor: ColorTheme.primary,
               foregroundColor: ColorTheme.whiteTheme,
             ),
-            onPressed: () {
-              !isLoading && releaseSlot();
+            onPressed: () async {
+              !isLoading ? releaseSlot() : {};
             },
             child: Text(
               !isLoading ? "RELEASE SLOT" : "releasing ...",
@@ -221,18 +221,6 @@ class _ReleaseWidgetState extends State<ReleaseWidget> {
               )
             : Column(
                 children: [
-                  // const Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text(
-                  //       'Thanks for using our service',
-                  //       style: TextStyle(
-                  //         fontSize: 22,
-                  //         color: ColorTheme.blackTheme,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

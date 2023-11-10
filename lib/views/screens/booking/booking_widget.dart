@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:parking_lot_system/data/api/booking/booking_api_impl.dart';
+import 'package:parking_lot_system/domain/usecase/booking_usecase.dart';
 import 'package:parking_lot_system/utils/responsive_utils.dart';
 import 'package:parking_lot_system/utils/theme.dart';
 import 'package:parking_lot_system/views/common/error_snack_bar.dart';
@@ -89,17 +89,17 @@ class _BookingWidgetState extends State<BookingWidget> {
       });
       return;
     } else {
-      final res = await BookingApiImpl().getBookings(
+      final res = await BookingUseCase().execute(
         vehicleNumber: vehicleNumber,
         vehicleType: selectedVehicleType,
       );
-      if (res.bookingId != null && res.bookingId!.isNotEmpty) {
+      if (res != null && res.bookingId.isNotEmpty) {
         setState(() {
           slotDetails = {
             SlotInformation(
-              bayId: res.bayId ?? "",
-              bookingId: res.bookingId ?? '',
-              floor: res.floor ?? '',
+              bayId: res.bayId,
+              bookingId: res.bookingId,
+              floor: res.floor,
               isSlotAvailable: true,
             )
           };

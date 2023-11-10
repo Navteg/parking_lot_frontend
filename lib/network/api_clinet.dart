@@ -9,8 +9,6 @@ class ApiClient {
   ApiClient(this._dio, this._baseUrl) {
     _dio
       ..options.baseUrl = _baseUrl ?? ''
-      ..options.connectTimeout = Endpoint.connectionTimeout
-      ..options.receiveTimeout = Endpoint.receiveTimeout
       ..options.headers = <String, dynamic>{}
       ..options.responseType = ResponseType.json
       ..interceptors.addAll(
